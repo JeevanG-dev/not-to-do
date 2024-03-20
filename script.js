@@ -1,12 +1,12 @@
-const taskList = [];
-
+let taskList = [];
 const entryElm = document.getElementById("entryList");
-const entryElm = document.getElementById("badList");
-const show = document.getElementById("ttlHrs");
+const badElm = document.getElementById("badList");
 
-const tWKHr = 7*24;
+const tWkHr = 7 * 24;
 
 const handleOnSubmit = (form) => {
+  //   console.log(document.getElementById("task").value);
+
   const newForm = new FormData(form);
 
   const task = newForm.get("task");
@@ -14,94 +14,125 @@ const handleOnSubmit = (form) => {
   const obj = {
     task,
     hr,
+    type: "entry",
+    id: randomIdGenerator(),
   };
 
+  //check if you have enought hour left to fit this incoming task
+
   const previousTtl = total();
-if(previousTtl + hr > tWKHr){
-    return alert("defef");
-}
+  if (previousTtl + hr > tWkHr) {
+    return alert("Sorry boss not enought time letf!");
+  }
 
   taskList.push(obj);
-
-  Display();
+  console.log(taskList);
+  display();
   total();
+
+  form.reset();
 };
 
-const Display = () => {
-  let str = "";
-
-  taskList.forEach((item, i) => {
-    str += `<tr>
+const display = () => {
+  let str = ``;
+  const temArg = taskList.filter((item) => item.type === "entry");
+  temArg.forEach((item, i) => {
+    console.log(item);
+    str += `
+   <tr>
 <th>${i + 1}</th>
 <td>${item.task}</td>
-<td>${item.hr} hrs</td>
-
+<td>${item.hr}hrs</td>
 <td class="text-end">
-<button onclick="handOnDelete(${i})" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-<button class="btn btn-sm btn-primary"><i class="fa-solid fa-arrow-right"></i></button>
+  <button onclick="handOnDelete('${item.id}')" class="btn btn-danger btn-sm">
+    <i class="fa-solid fa-trash"></i>
+  </button>
+  <button onclick="switchTask('${
+    item.id
+  }', 'bad')" class="btn btn-success btn-sm">
+    <i class="fa-sharp fa-solid fa-arrow-right-long"></i>
+  </button>
 </td>
 </tr>`;
   });
 
   entryElm.innerHTML = str;
+  displayBadList();
 };
 
+const displayBadList = () => {
+  let str = ``;
 
-const DisplayBadList = () => {
-    let str = "";
-  const temArg = taskList.filter((item)=>
-    item.type === "bad")
+  const temArg = taskList.filter((item) => item.type === "bad");
+  temArg.forEach((item, i) => {
+    console.log(item);
+    str += `
+   <tr>
+<th>${i + 1}</th>
+<td>${item.task}</td>
+<td>${item.hr}hrs</td>
+<td class="text-end">
+ 
+  <button onclick="switchTask('${
+    item.id
+  }', 'entry')" class="btn btn-warning btn-sm">
+    <i class="fa-sharp fa-solid fa-arrow-left-long"></i>
+  </button>
+  <button onclick="handOnDelete('${item.id}')" class="btn btn-danger btn-sm">
+  <i class="fa-solid fa-trash"></i>
+</button>
+</td>
+</tr>`;
+  });
 
-    temArg.forEach((item, i) => {
-      str += `<tr>
-  <th>${i + 1}</th>
-  <td>${item.task}</td>
-  <td>${item.hr} hrs</td>
-  
-  <td class="text-end">
-  <button onclick="handOnDelete(${i})" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></button>
-  <button class="btn btn-sm btn-primary"><i class="fa-solid fa-arrow-right"></i></button>
-  </td>
-  </tr>`;
-    });
-  
-    entryElm.innerHTML = str;
-  };
-const total = ()=>{
-    const ttl = taskList.reduce((acc, item)=>{
-        return acc + item.hr;
-    },0);
+  badElm.innerHTML = str;
+  // total bad hr calcuation
 
-    show.innerText = ttl;
-    return ttl;
-}
-
-
-const handOnDelete = (id)=>{
-    if(window.confirm("Are you sure want to delete the item"))
-    {
-taskList.splice(id, 1)
-Display()
-    }
-    
-
+  const badHrs = temArg.reduce((acc, item) => {
+    return acc + item.hr;
+  }, 0);
+  // show in the element
+  document.getElementById("badHrs").innerText = badHrs;
 };
-const switchTask = (id,type) =>{
 
-}
+//[{task: "dd", hr:"88"}]
 
+const total = () => {
+  const ttl = taskList.reduce((acc, item) => {
+    return acc + item.hr;
+  }, 0);
 
-const randomIdGenerator =()=>{
+  document.getElementById("ttlHrs").innerText = ttl;
+  return ttl;
+};
 
-    const idLength = 6
-    const str ="qwertyuioplkjhgfdsamnbvcxzQWERTYUIOPLKJHGFDSAZXCVBNM1234567890"
+const handOnDelete = (id) => {
+  if (window.confirm("Are you sure, you want to delete the item?")) {
+    taskList = taskList.filter((item) => item.id !== id);
+    display();
+    total();
+  }
+};
 
-    const randomPosition = Math.floor(Math.random()* str.length);
-    str[randomPosition];
+const switchTask = (id, type) => {
+  console.log(id, type);
 
-    for(let i= 0; i <idLength; i++){
-        id += str[randomPosition];
-    }
+  taskList = taskList.map((item) => {
+    if (item.id === id) item.type = type;
 
-    return id;
-}
+    return item;
+  });
+  display();
+};
+
+const randomIdGenerator = () => {
+  const idLength = 6;
+  const str = "qwertyuioplkjhgfdsazxcvbnmQWERTYUIOPLKJHGFDSAZXCVBNM1234567890";
+
+  let id = "";
+  for (let i = 0; i < idLength; i++) {
+    const randomPosition = Math.floor(Math.random() * str.length);
+    id += str[randomPosition];
+  }
+  return id;
+};

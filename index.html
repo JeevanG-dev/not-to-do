@@ -10,7 +10,6 @@
       integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="style.css" />
 
     <link
       rel="stylesheet"
@@ -19,85 +18,79 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <title>Not to do List</title>
+
+    <link rel="stylesheet" href="style.css" />
+    <title>Not to do list</title>
   </head>
   <body>
-    <div class="wrapper vh-100 pt-5">
+    <div class="wrapper pt-5">
       <div class="container">
-        <!-- title -->
+        <!-- title  -->
+        <h1 class="text-center">Not To Do List</h1>
 
-        <h1 class="text-center mb-4">Not to Do list</h1>
-
-        <!-- form -->
-
-        <form
-          action="javascript:void(0)"
-          method=""
-          enctype=""
-          onsubmit="handleOnSubmit(this)"
-        >
-          <div class="row g-3 shadow-lg border p-5 rounded">
-            <div class="col-md-5">
+        <!-- form  -->
+        <form action="javascript:void(0)" onsubmit = "handleOnSubmit(this)">
+          <div class="row g-2 mt-5 shadow-lg border p-5 rounded">
+            <div class="col-md-7">
               <input
                 type="text"
                 class="form-control"
                 placeholder="Task"
-                aria-label="First name"
+                aria-label="Task"
+                id="task"
                 name="task"
                 required
               />
             </div>
-            <div class="col-md -5">
+            <div class="col-md-2">
               <input
+                name="hr"
                 type="number"
                 class="form-control"
-                placeholder="Hours"
-                aria-label="First name"
-                name="hr"
+                placeholder="hours"
+                aria-label="hours"
                 required
+                min="1"
               />
             </div>
-            <div class="col-md-2 d-grid">
-              <button class="btn btn-primary" type="submit">Add Task</button>
+            <div class="col-md-3 d-grid">
+              <button class="btn btn-primary" type="submit">
+                Add New Task
+              </button>
             </div>
           </div>
         </form>
-        <!-- table -->
-
+        <!-- tables -->
         <div class="row mt-5 gap-2">
-          <!-- 1.entry list -->
+          <!-- 1. entry list -->
           <div class="col-md">
             <h3 class="text-center">Entry List</h3>
             <hr />
-            <table class="table table-hover myTable border">
-              <tbody id="entryList">
-                No Task
-              </tbody>
+            <table class="table myTable table-hover border">
+              <tbody id="entryList"></tbody>
             </table>
           </div>
-          <!-- bad list -->
+
+          <!-- 2. bad list  -->
           <div class="col-md">
             <h3 class="text-center">Bad List</h3>
             <hr />
-            <table class="table table-hover myTable border">
-              <tbody id="badList">
-                
-              </tbody>
+            <table class="table myTable table-hover border">
+              <tbody id="badList"></tbody>
             </table>
-            <div class="alert alert-secondary" role="alert">
-              A simple secondary alert—check it out!
+            <div class="alert alert-success" role="alert">
+              You could have saved = <span id="badHrs">0</span> hrs
             </div>
           </div>
         </div>
 
-        <!-- total hrs -->
+        <!-- total hrs  -->
 
-        <div class="alert alert-secondary" role="alert">
-     The total allocated time = <span id="ttlHrs">0</span>
+        <div class="alert alert-success" role="alert">
+          The total hours allocated = <span id="ttlHrs">0</span> hrs
         </div>
       </div>
     </div>
-
     <script src="script.js"></script>
   </body>
 </html>
